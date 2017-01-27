@@ -17,7 +17,7 @@ initial_shape is a 8-by-2-by-n matrix. n is the number of samples.
 or you could directly use groundtruth disturbed by rand value
 
 ```matlab
-load groundtruth_test_lfpw.mat
+load dataset\test_set\groundtruth_test_lfpw.mat
 initial_shape = cat(3, groundtruth_test_lfpw.FPoint);
 initial_shape = initial_shape(flag_lfpw, :, :) + rand(8, 2, 10)*8;
 ```
