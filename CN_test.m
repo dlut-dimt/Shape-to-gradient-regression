@@ -42,6 +42,9 @@ for kkt = 1:options.K
 
 end
     Testdata(i).FPoint = res; 
+    disp(sprintf('error after regression:%f', mean(sum((Testdata(i).FPoint - groundtruth_test_lfpw(i).FPoint(flag_lfpw,:)).^2, 2))))
+    disp(sprintf('error before regression:%f',mean(sum((initial_shape(:,:,i) - groundtruth_test_lfpw(i).FPoint(flag_lfpw,:)).^2, 2))))
+    disp ''
 end
 
 
