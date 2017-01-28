@@ -5,9 +5,17 @@ The Matlab source codes for Shape-to-gradient regression in "Explicit Shape Regr
 Just run CN_training
 
 ## Testing
-For testing, you need configure initializing shape with other alignment algorithm. In line 27 in `CN_test`
+For testing, you need configure initializing shape with other open source alignment algorithm. For example, you could use [this one](https://github.com/ShownX/Explicit-Shape-Regression). Following the instruction and setup the project. Run test code. Than in `CN_test`, modify the source code as follow:
 
 ```matlab
+% line 23 in CN_test
+ %% shape regression
+ initial_shape = prediction;
+ initial_shape = initial_shape(flag_lfpw, :, :)
+ 
+ %...
+ 
+%line 27 in CN_test
  % here, requare a load initial shape
  res = initial_shape(:, :, i)
 ```
