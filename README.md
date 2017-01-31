@@ -12,7 +12,7 @@ Using dll under C# environment:
 
 3. Add 'ESR_RF_LINK.dll' into reference.If necessary, you need to add the reference 'System.Drawing' and 'System.Windows.Forms', which you can find in Add Reference Dialog Box.
 
-5. unzip `Compressed file.zip.***` to get training results.
+5. unzip `Training_res.zip.***` to get training results.
 
 6. Run following codes for testing:
 ```C#
@@ -120,3 +120,5 @@ extern "C" __declspec(dllexport) double* Predict(double x, double y, double widt
 // output HelloWorld
 extern "C" __declspec(dllexport) char* Hello()
 ```
+
+'dataset.zip' is a part of LFPW used for test.
