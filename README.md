@@ -12,7 +12,9 @@ Using dll under C# environment:
 
 3. Add 'ESR_RF_LINK.dll' into reference.If necessary, you need to add the reference 'System.Drawing' and 'System.Windows.Forms', which you can find in Add Reference Dialog Box.
 
-4. Run following codes for testing:
+5. unzip `Compressed file.zip.***` to get training results.
+
+6. Run following codes for testing:
 ```C#
 using System;
 using System.Collections.Generic;
@@ -75,7 +77,7 @@ namespace Demo
     }
 }
 ```
-5. For training, you can use following Function:
+7. For training, you can use following Function:
 
 ```C#
 Entrance.ESR_Train(FormatOfimage, ImagePath, BoundingBoxFilePath, GroundtruthFilePath, NumberOfImages);
