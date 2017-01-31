@@ -1,39 +1,120 @@
-# Shape-to-gradient-regression
-The Matlab source codes for Shape-to-gradient regression in "Explicit Shape Regression with Characteristic Number for Facial Landmark Localization "
+# Introduction
 
-## Training
-Just run CN_training
+This package is an implementation of Explicit Shape Regression with Characteristic Number for Facial Landmark Localization.
 
-## Testing
-For testing, you need configure initializing shape with other open source alignment algorithm. For example, you could use [this one](https://github.com/ShownX/Explicit-Shape-Regression). Following the instruction and setup the project. Run test code. Than in `CN_test`, modify the source code as follow:
+We supply a  picture "1.jpg" for testing. The boundingBox of the picture is X= 251, Y= 228, width= 304, height= 304.
 
-```matlab
-% line 23 in CN_test
- %% shape regression
- initial_shape = prediction;
- initial_shape = initial_shape(flag_lfpw, :, :)
- 
-%...
- 
-%line 27 in CN_test
- % here, requare a load initial shape
- res = initial_shape(:, :, i)
+Using dll under C# environment:
+
+1. Create a new c# project named 'Demo';
+
+2. Copy all files in this pakage into the 'Debug' or 'Release' directry of your project.
+
+3. Add 'ESR_RF_LINK.dll' into reference.If necessary, you need to add the reference 'System.Drawing' and 'System.Windows.Forms', which you can find in Add Reference Dialog Box.
+
+4. Run following codes for testing:
+```C#
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using ESR_RF_LINK;
+using System.Drawing;
+using System.Windows.Forms;
+namespace Demo
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            //load model
+            Entrance.ESR_LoadModel("LBF.model");
+            string url = @"1.jpg"; //image url
+
+            Bitmap bm = new Bitmap(url);
+            Form form = new Form();
+            form.Width = bm.Width;
+            form.Height = bm.Height;
+            form.Show();
+            Graphics gp = form.CreateGraphics();
+            gp.DrawImage(bm, new Point(0, 0));
+
+            //Predict
+            Console.WriteLine("Predicting Please wait");
+            PointF[] result;
+
+            System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch();
+            watch.Start();
+            if (false)
+            {
+                //bitmap as input
+                //return PointF[]
+                result = Entrance.ESR_Predict(bm, 251, 228, 304, 304);
+            }
+            else
+            {
+                //url as input
+                //return PointF[]
+                result = Entrance.ESR_Predict(url, 251, 228, 304, 304);
+            }
+            watch.Stop();
+            Console.WriteLine("Predicted");
+            Console.WriteLine("fps:");
+            Console.Write(1000.0f / watch.Elapsed.Milliseconds);
+
+            //Drawing the detected points on image
+            for (int i = 0; i < result.Length; i++)
+            {
+                gp.DrawEllipse(Pens.Red, result[i].X, result[i].Y, 2, 2);
+            }
+
+            Console.ReadKey();
+
+        }
+    }
+}
+```
+5. For training, you can use following Function:
+
+```C#
+Entrance.ESR_Train(FormatOfimage, ImagePath, BoundingBoxFilePath, GroundtruthFilePath, NumberOfImages);
+
+//e.g.
+Entrance.ESR_Train("jpg", "C:/image/", "C:/image/boundingBox.txt", "C:/image/groundTruth.txt", 486);
+```
+Format of boundingBox file is as follows:
+```
+(X)     (Y)   (width) (height) [This line is just for showing title]
+251	228	304	304
+116	100	125	125
+145	76	203	203
+186	194	274	274
 ```
 
-initial_shape is a 8-by-2-by-n matrix. n is the number of samples. 
+Format of groundTruth file is as follows:
+```
+(x1)    (x2)    (x3)    ... (x68)  (y1)  (y2)    (y3)  ... (y68)[This line is just for showing title]
+278	279	281	...  28    285	 294	  309   ... 345
+```
+Using dll under C++ environment:
+1. Create a new c++ project named 'Demo';
 
-or you could directly use groundtruth disturbed by rand value. modify `CN_test` as follow:
+2. Copy all files in this pakage into the 'Debug' or 'Release' directry of your project.
 
-```matlab
-% line 23 in CN_test
- %% shape regression
- load dataset\test_set\groundtruth_test_lfpw.mat
- initial_shape = cat(3, groundtruth_test_lfpw.FPoint);
- initial_shape = initial_shape(flag_lfpw, :, :) + rand(8, 2, 10)*8;
- 
-%...
- 
-%line 27 in CN_test
- % here, requare a load initial shape
- res = initial_shape(:, :, i)
+3. Add `ESR_RF_LINK.dll` into reference.
+
+The Function yan can use:
+```C#
+// load model
+extern "C" __declspec(dllexport) void LoadModel(char* path)
+
+// face alignment using image url
+extern "C" __declspec(dllexport) double* UrlPredict(char* data, double x, double y, double width, double height)
+
+// face alignment using image data
+extern "C" __declspec(dllexport) double* Predict(double x, double y, double width, double height, char* data,double imHeight,double imWidth)
+
+// output HelloWorld
+extern "C" __declspec(dllexport) char* Hello()
 ```
